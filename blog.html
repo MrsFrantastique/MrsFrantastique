@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mrs Frantastique Files</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7B5EA7;
+    --purple-light: #EDE8F8;
+    --purple-dark: #4A3570;
+    --cyan: #00B4C6;
+    --cyan-light: #E0F7FA;
+    --dark: #1A1025;
+    --text: #2D1F45;
+    --muted: #7A6A90;
+    --bg: #FAF8FF;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(250,248,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(123,94,167,0.1);
+  }
+
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--purple-dark);
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+
+  .nav-links a {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--purple); }
+
+  /* MASTHEAD */
+  .masthead {
+    padding: 8rem 3rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+    border-bottom: 1px solid rgba(123,94,167,0.12);
+    margin-bottom: 4rem;
+  }
+
+  .page-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .page-label::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--cyan);
+  }
+
+  .blog-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    color: var(--dark);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .blog-title em { font-style: italic; color: var(--purple); }
+
+  .blog-tagline {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  .subscribe-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--purple);
+    color: #fff;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s;
+    align-self: center;
+  }
+
+  .subscribe-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  /* POSTS */
+  .posts-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 3rem 5rem;
+  }
+
+  .posts-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Featured post */
+  .post-featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    background: var(--white);
+    border: 1px solid rgba(123,94,167,0.12);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .post-featured:hover {
+    border-color: var(--purple);
+    transform: translateY(-3px);
+  }
+
+  .post-featured-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--purple);
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .post-featured-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem;
+    color: var(--dark);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-featured-excerpt {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .post-featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .post-date { font-size: 0.8rem; color: var(--muted); }
+  .post-tag {
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border-radius: 20px;
+  }
+
+  .post-featured-visual {
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--cyan-light) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-featured-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(123,94,167,0.06) 20px, rgba(123,94,167,0.06) 21px);
+  }
+
+  .post-visual-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--purple);
+    opacity: 0.3;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Post list */
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border: 1px solid rgba(123,94,167,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
+
+  .post-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: var(--white);
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid rgba(123,94,167,0.07);
+    transition: background 0.15s, padding-left 0.2s;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .post-row:nth-child(1) { animation-delay: 0.2s; }
+  .post-row:nth-child(2) { animation-delay: 0.3s; }
+  .post-row:nth-child(3) { animation-delay: 0.4s; }
+
+  .post-row:last-child { border-bottom: none; }
+
+  .post-row:hover {
+    background: var(--purple-light);
+    padding-left: 2rem;
+  }
+
+  .post-row-left { display: flex; flex-direction: column; gap: 4px; }
+
+  .post-row-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dark);
+  }
+
+  .post-row-excerpt {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .post-row-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .post-row-date { font-size: 0.78rem; color: var(--muted); }
+  .post-row-tag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    background: var(--cyan-light);
+    color: #006875;
+    border-radius: 20px;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SUBSTACK CTA */
+  .substack-cta {
+    background: var(--dark);
+    border-radius: 20px;
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .substack-cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .substack-cta h2 em { font-style: italic; color: var(--cyan); }
+
+  .substack-cta p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 420px;
+  }
+
+  .substack-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--cyan);
+    color: var(--dark);
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .substack-link:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-top: 1px solid rgba(123,94,167,0.1);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .masthead { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; }
+    .posts-container { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .post-featured { grid-template-columns: 1fr; }
+    .post-featured-visual { min-height: 120px; }
+    .substack-cta { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="home.html" class="nav-logo">Mrs Frantastique</a>
+  <ul class="nav-links">
+    <li><a href="home.html">home</a></li>
+    <li><a href="about.html">about</a></li>
+    <li><a href="community.html">the franny pack</a></li>
+    <li><a href="blog.html" class="active">the files</a></li>
+  </ul>
+</nav>
+
+<div class="masthead">
+  <div>
+    <div class="page-label">the blog</div>
+    <h1 class="blog-title">the <em>Mrs Frantastique</em><br>Files</h1>
+    <p class="blog-tagline">real talk for creators who are figuring it out — because nobody should be doing this alone.</p>
+  </div>
+  <a href="https://mrsfrantastique.substack.com" class="subscribe-btn" target="_blank">
+    ✉ Subscribe on Substack
+  </a>
+</div>
+
+<div class="posts-container">
+  <div class="posts-label">recent posts</div>
+
+  <!-- Featured post — update this manually with your latest piece -->
+  <a href="https://mrsfrantastique.substack.com" class="post-featured" target="_blank">
+    <div>
+      <span class="post-featured-badge">latest</span>
+      <h2 class="post-featured-title">I started the Franny Pack Project and I have no idea what I'm doing</h2>
+      <p class="post-featured-excerpt">Which is exactly the point. Here's what the first week actually looked like — the plan, the pivots, and the moment I almost quit before I even started.</p>
+      <div class="post-featured-meta">
+        <span class="post-date">coming soon</span>
+        <span class="post-tag">creator journey</span>
+      </div>
+    </div>
+    <div class="post-featured-visual">
+      <span class="post-visual-text">F</span>
+    </div>
+  </a>
+
+  <!-- Post list — update manually as you publish -->
+  <div class="post-list">
+    <a href="https://mrsfrantastique.substack.com" class="post-row" target="_blank">
+      <div class="post-row-left">
+        <span class="post-row-title">what building in public actually means (hint: it's uncomfortable)</span>
+        <span class="post-row-excerpt">coming soon on Substack</span>
+      </div>
+      <div class="post-row-right">
+        <span class="post-row-tag">mindset</span>
+      </div>
+    </a>
+    <a href="https://mrsfrantastique.substack.com" class="post-row" target="_blank">
+      <div class="post-row-left">
+        <span class="post-row-title">the streaming tools I actually use (and a few I abandoned)</span>
+        <span class="post-row-excerpt">coming soon on Substack</span>
+      </div>
+      <div class="post-row-right">
+        <span class="post-row-tag">tech</span>
+      </div>
+    </a>
+    <a href="https://mrsfrantastique.substack.com" class="post-row" target="_blank">
+      <div class="post-row-left">
+        <span class="post-row-title">on consistency — the unglamorous version nobody talks about</span>
+        <span class="post-row-excerpt">coming soon on Substack</span>
+      </div>
+      <div class="post-row-right">
+        <span class="post-row-tag">creator life</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="substack-cta">
+    <div>
+      <h2>read <em>The Files</em><br>on Substack</h2>
+      <p>every post goes out there first. subscribe so you don't miss a thing — it's free, and it's real talk.</p>
+    </div>
+    <a href="https://mrsfrantastique.substack.com" class="substack-link" target="_blank">
+      Read on Substack →
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Mrs Frantastique · the franny pack
+</footer>
+
+</body>
+</html>
